@@ -1,0 +1,13 @@
+Login Dengan email : anakmbarep999@gmail.com
+pass: 1q2w3e4r5t
+
+setting .env_example ubah menjadi .env
+
+Ada Menu pasien sebagai master data 
+dan register pasien 
+langkah pasien 
+
+register -> billing 
+pasien -> riwayat kunjungan
+
+pagination diatas data 10 

@@ -1,0 +1,67 @@
+{
+	"info": {
+		"_postman_id": "ecabb12c-f0c2-4f1f-88e2-1dd79ba5a828",
+		"name": "API COLLECTION RSB",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"_exporter_id": "3051979"
+	},
+	"item": [
+		{
+			"name": "get pasien id",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": "http://localhost:8000/api/pasien/1"
+			},
+			"response": []
+		},
+		{
+			"name": "get pasien",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": "http://localhost:8000/api/pasien"
+			},
+			"response": []
+		},
+		{
+			"name": "post pasien",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "no_rm",
+							"value": "3",
+							"type": "text"
+						},
+						{
+							"key": "nama_pasien",
+							"value": "Muslimah",
+							"type": "text"
+						},
+						{
+							"key": "alamat",
+							"value": "jln Kedaton",
+							"type": "text"
+						},
+						{
+							"key": "tanggal_lahir",
+							"value": "1995-09-08",
+							"type": "text"
+						},
+						{
+							"key": "jenis_kelamin",
+							"value": "P",
+							"type": "text"
+						}
+					]
+				},
+				"url": "http://localhost:8000/api/pasien"
+			},
+			"response": []
+		}
+	]
+}
