@@ -103,7 +103,7 @@ class asesmenController extends Controller
     function  getAsesmen($noreg) {
         $data=rs_asesmen_medis::where('no_register','=',$noreg)
         ->leftJoin('rs_gambar_gigi','rs_gambar_gigi.kode_gambar','=','rs_asesmen_medis.kode_gambar_gigi')
-        ->select('rs_asesmen_medis.no_register','rs_gambar_gigi.code_loc as code','rs_gambar_gigi.pos_loc as pos','rs_gambar_gigi.pos_loc_general','rs_gambar_gigi.keterangan')
+        ->select('rs_asesmen_medis.no_register','rs_gambar_gigi.id','rs_gambar_gigi.code_loc as code','rs_gambar_gigi.pos_loc as pos','rs_gambar_gigi.pos_loc_general','rs_gambar_gigi.keterangan')
         ->get();
         $asesmen=rs_asesmen_medis::where('no_register','=',$noreg)->first();
         $print=[
@@ -140,5 +140,13 @@ class asesmenController extends Controller
         }
         // return $nml;
         return $nml;
+    }
+    function hapusDetailAsesmen($id){
+        $data=rs_gambar_gigi::find($id);
+        $data->delete();
+        return response()->json([
+            'code'=>200,
+            'message'=>'Data berhasil dihapus'
+        ]);
     }
 }

@@ -40,6 +40,7 @@
                             <td colspan="3">
                                 {{ $data->penjamin . ' (' . $data->no_registrasi . ')' }}
                                 <input type="hidden" id="no_registrasi" value="{{ $data->no_registrasi }}">
+                                <input type="hidden" id="no_gambar" >
                             </td>
                         </tr>
                     </table>
@@ -228,8 +229,9 @@
         </div>
         <div class="card-footer d-flex justify-content-end">
             <div class="btn-group">
-                <button type="button" onclick="printAsesmen('{{ $data->no_registrasi }}')" class="btn  btn-warning "><i class="bi bi-printer"></i> Print
-                        Asesmen</button>
+                <button type="button" onclick="printAsesmen('{{ $data->no_registrasi }}')" class="btn  btn-warning "><i
+                        class="bi bi-printer"></i> Print
+                    Asesmen</button>
                 <button type="button" onclick="" class="btn  btn-primary "><i class="bi bi-save"></i> Simpan
                     Data Asesmen</button>
             </div>
@@ -271,51 +273,64 @@
             console.log(geometry)
             hasil_odontogram = [];
             hasil_odontogram.push(geometry);
-            loadDataOdontogram(geometry);
+            // add array pada locpos
+            addArrayPos(geometry);
+            
+            
+            // loadDataOdontogram(geometry);
         })
+        var loc_pos = [];
+        var loc_pos2 = [];
         loadAsesmenData();
+
         function loadAsesmenData() {
-            var noreg=$('#no_registrasi').val();
+            var noreg = $('#no_registrasi').val();
             // ambil hasil asesmen
             $.ajax({
-                url:'/asesmen/get-asesmen/'+noreg,
-                dataType:'JSON',
-                type:'get',
-                success:function(res) {
-                    var data_odo=[];
-                    data_odo=res.detail;
+                url: '/asesmen/get-asesmen/' + noreg,
+                dataType: 'JSON',
+                type: 'get',
+                success: function(res) {
+                    var data_odo = [];
+                    data_odo = res.detail;
                     // load odontogram data
                     $("#odontogram").odontogram('setGeometryByPos', data_odo);
                     // load keteranagn
-                    var baris="";
+                    var baris = "";
                     $.each(data_odo, function(index, value) {
+                        var item = {}
+                        item['code'] = value.code;
+                        item['pos'] = value.pos;
+                        item['keterangan'] = value.keterangan;
+                        loc_pos.push(item);
                         baris += `<div class="col-12 col-md-6 col-lg-6 mt-2">
                                 <div class="input-group">
                                     <div class="input-group-prepend">
                                         <span class="input-group-text">${value.pos} | ${value.code}</span>
                                     </div>  
-                                    <input type="text" id="ket_odontogram_${value.code}_${value.pos}" name="ket_odontogram[]" placeholder="${value.keterangan}" name="ket_odontogram" class="form-control">
-                                    <button type="button" class="btn btn-danger" onclick="hapusKeterangan('${value.code}_${value.pos}')"><i class="bi bi-trash"></i></button>
+                                    <input type="text" id="ket_odontogram_${value.code}_${value.pos}" name="ket_odontogram[]" value="${value.keterangan}" name="ket_odontogram" class="form-control">
+                                    <button type="button" class="btn btn-danger" onclick="hapusKeterangan('${value.id}')"><i class="bi bi-trash"></i></button>
                                 </div>
                             </div>`;
                     })
                     $('#isian_odontogram').html(baris);
-                    var asesmen=res.asesmen;
+                    var asesmen = res.asesmen;
                     // plot ke asesmen medis
                     $('#oclusi').val(asesmen.oclusi).trigger('change');
                     $('#torus_palatinus').val(asesmen.torus_palatinus).trigger('change');
                     $('#torus_mandibularis').val(asesmen.torus_mandibularis).trigger('change');
                     $('#palatum').val(asesmen.palatum).trigger('change');
                     $('#diastema').val(asesmen.diastema).trigger('change');
-                    if(asesmen.diastema=='Ada') {
+                    $('#no_gambar').val(asesmen.kode_gambar_gigi);
+                    if (asesmen.diastema == 'Ada') {
                         $('#dst_ada_ket').removeClass('d-none');
                     }
                     $('#dst_ada_ket').val(asesmen.diastema_ket);
 
                     $('#lainLain').val(asesmen.ket_lain);
                     // explode by | 
-                    var dmf= asesmen.d_m_f;
-                    dmf=dmf.split('|');
+                    var dmf = asesmen.d_m_f;
+                    dmf = dmf.split('|');
                     $('#d_typ').val(dmf[0]);
                     $('#m_typ').val(dmf[1]);
                     $('#f_typ').val(dmf[2]);
@@ -323,8 +338,61 @@
                     $('#jenis_photo').val(asesmen.foto_ot).trigger('change');
                     $('#ket_photo_rg').val(asesmen.jum_poto_rg);
                     $('#jenis_photo_org').val(asesmen.foto_ot_rg).trigger('change');
+                    console.log(loc_pos);
                 }
             })
+        }
+
+        function addArrayPos(data) {
+            loc_pos2 = [];
+            
+            // ambil name dan pos
+            $.each(data, function(index, value) {
+                $.each(value, function(index2, value2) {
+                    var item = {}
+                    item['code'] = value2.name;
+                    item['pos'] = value2.pos;
+                    loc_pos2.push(item);
+                })
+            })
+            // tambahkan pada array loc_pos yang belum exist
+            $.each(loc_pos2, function(index, value) {
+                var found = false;
+                $.each(loc_pos, function(index2, value2) {
+                    if (value.code == value2.code && value.pos == value2.pos) {
+                        found = true;
+                    }
+                })
+                if (!found) {
+                    loc_pos.push(value);
+                    // tambah input keterangan 
+                    var baris = `<div class="col-12 col-md-6 col-lg-6 mt-2" id="inar${index}">
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">${value.pos} | ${value.code}</span>
+                                    </div>  
+                                    <input type="text" id="ket_odontogram_${value.code}_${value.pos}" name="ket_odontogram[]" placeholder="Isi Keterangan" name="ket_odontogram" class="form-control">
+                                    <input type="hidden" id="vert_code_${value.code}"  class="form-control" name="vert_code[]" value="${value.code}">
+                                    <input type="hidden" id="vert_pos_${value.pos}"  class="form-control" name="vert_pos[]" value="${value.pos}">
+                                    <button type="button" class="btn btn-danger" onclick="hapusArrayLoc('${index}')"><i class="bi bi-trash"></i></button>
+                                </div>
+                            </div>`;
+                    $('#isian_odontogram').append(baris);
+                }
+            })
+            console.log(loc_pos);
+        }
+        function hapusArrayLoc(id){
+            loc_pos2=[];
+            loc_pos.splice(id, 1);
+            // hapus input nya 
+            $('#inar'+id).remove();
+            console.log(loc_pos);
+            // load odontogram
+            $("#odontogram").odontogram('setGeometryByPos', loc_pos);
+        }
+        function loadGeomEDit() {
+            $("#odontogram").odontogram('setGeometryByPos', loc_pos);
         }
         $("#ODONTOGRAM_MODE_HAPUS").click(function() {
             $("#odontogram").odontogram('setMode', ODONTOGRAM_MODE_HAPUS);
@@ -425,7 +493,6 @@
                 }
             })
         }
-
         // simpan asesmen dan hasil odontogram
         function simpanAsesmen() {
             var hasil_keterangan = [];
@@ -531,9 +598,38 @@
             })
             $('#isian_odontogram').html(baris);
         }
+
         function printAsesmen(noreg) {
             // buka link
             window.open('/asesmen/print-asesmen/' + noreg, '_blank');
+        }
+
+        function hapusKeterangan(id) {
+            $.ajax({
+                url: '/asesmen/hapus-detail-asesmen/' + id,
+                dataType: 'JSON',
+                type: 'get',
+                success: function(res) {
+                    if (res.code == '200') {
+                        loadAsesmenData();
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Berhasil',
+                            text: 'Data berhasil dihapus',
+                            showConfirmButton: false,
+                            timer: 1500
+                        })
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Gagal',
+                            text: 'Data gagal dihapus',
+                            showConfirmButton: false,
+                            timer: 1500
+                        })
+                    }
+                }
+            })
         }
     </script>
 @endpush

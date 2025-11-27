@@ -47,6 +47,10 @@
                     <h4 class="text-center">
                         RUMAH SAKIT MINI SIMRS
                     </h4>
+                    <p class="text-center">
+                        Klinik Gigi dan Mulut
+                        Jl. Kesehatan No. 123, Kota Sehat, Indonesia | Telp: (021) 1234567 | Email: info@minisimrs.com
+                    </p>
                 </div>
                 <div class="col-12">
                     <hr>
@@ -975,7 +979,6 @@
                 }
             })
         }
-
         function loadDataOdontogram(geometry) {
             var baris = "";
             $.each(geometry, function(index, value) {

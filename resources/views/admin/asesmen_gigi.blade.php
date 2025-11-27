@@ -6,7 +6,9 @@
     Asesmen Gigi
 @endsection
 @section('css')
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert2/11.23.0/sweetalert2.min.css" integrity="sha512-Ivy7sPrd6LPp20adiK3al16GBelPtqswhJnyXuha3kGtmQ1G2qWpjuipfVDaZUwH26b3RDe8x707asEpvxl7iA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert2/11.23.0/sweetalert2.min.css"
+        integrity="sha512-Ivy7sPrd6LPp20adiK3al16GBelPtqswhJnyXuha3kGtmQ1G2qWpjuipfVDaZUwH26b3RDe8x707asEpvxl7iA=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
 @endsection
 @section('content')
     <div class="card">
@@ -81,13 +83,13 @@
                                 </div>
                                 <div class="col-12 col-lg-3 col-md-3">
                                     <div class="form-group">
-                                       <select name="" id="torus_palatinus" class="form-control">
+                                        <select name="" id="torus_palatinus" class="form-control">
                                             <option value="Tidak Ada">Tidak Ada</option>
                                             <option value="Kecil">Kecil</option>
                                             <option value="Besar">Besar</option>
                                             <option value="Sedang">Sedang</option>
                                             <option value="Multiple">Multiple</option>
-                                       </select>
+                                        </select>
                                     </div>
                                 </div>
                             </div>
@@ -117,7 +119,7 @@
                                         </select>
                                     </div>
                                 </div>
-                                
+
                             </div>
                             <div class="row mt-3">
                                 <div class="col-12 col-lg-2 col-md-2">
@@ -130,7 +132,8 @@
                                             <option value="Ada">Ada</option>
                                         </select>
                                         <div class="form-group mt-2">
-                                            <input type="text" id="dst_ada_ket" class="form-control d-none" placeholder="Ketrangan Tambahan">
+                                            <input type="text" id="dst_ada_ket" class="form-control d-none"
+                                                placeholder="Ketrangan Tambahan">
                                         </div>
                                     </div>
                                 </div>
@@ -158,7 +161,7 @@
                                 <div class="col-12 col-lg-4 col-md-4">
                                     <div class="input-group">
                                         <div class="input-prepend">
-                                            <span class="input-group-text">M  <i>(Missing)</i> </span>
+                                            <span class="input-group-text">M <i>(Missing)</i> </span>
                                         </div>
                                         <input type="text" value="-" class="form-control" id="m_typ">
                                     </div>
@@ -169,6 +172,9 @@
                                             <span class="input-group-text">F <i>(Filled)</i></span>
                                         </div>
                                         <input type="text" value="-" class="form-control" id="f_typ">
+                                        <div class="input-append">
+                                            <button onclick="hitungDMF()" class="btn btn-primary">Hitung DMF</button>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -210,12 +216,12 @@
                                 </div>
                                 <div class="col-12 col-lg-4 col-md-4">
                                     <div class="form-group">
-                                       <select name="" id="jenis_photo_org" class="form-control">
-                                           <option value="-">-</option>
-                                           <option value="PA">PA</option>
-                                           <option value="OPG">OPG</option>
-                                           <option value="CEP">CEP</option>
-                                       </select>    
+                                        <select name="" id="jenis_photo_org" class="form-control">
+                                            <option value="-">-</option>
+                                            <option value="PA">PA</option>
+                                            <option value="OPG">OPG</option>
+                                            <option value="CEP">CEP</option>
+                                        </select>
                                     </div>
                                 </div>
                             </div>
@@ -231,242 +237,8 @@
     </div>
 @endsection
 @push('js')
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert2/11.23.0/sweetalert2.js" integrity="sha512-SAy+5di7/mSvHkp80IwlsrQxfB5Zo2V8DeYseepV20ttbmwaD18xGLrdQfLNr4W7o7LO0HsNGrngqqag6ZV50Q==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <script type="text/javascript">
-        $("#odontogram").odontogram('init', {
-            width: "1250px",
-            height: "430px"
-        });
-        // var canvas = document.getElementsByTagName('odontogram')[0];
-        // canvas.width  = $(window).width()*2; 
-        // canvas.height = 630*2;
-        $("#odontogram").odontogram('setGeometryByPos', [
-            // {
-            //     code: 'AMF',
-            //     pos: '18-R'
-            // },
-            // {
-            //     code: 'AMF',
-            //     pos: '18-L'
-            // },
-            // {
-            //     code: 'SOU',
-            //     pos: '83'
-            // },
-            // {
-            //     code: 'ARROW_TOP_LEFT',
-            //     pos: '84'
-            // },
-        ]);
-        var hasil_odontogram = [];
-        $('#odontogram').on('change', function(_, geometry) {
-            console.log(geometry)
-            hasil_odontogram = [];
-            hasil_odontogram.push(geometry);
-            loadDataOdontogram(geometry);
-        })
-
-        $("#ODONTOGRAM_MODE_HAPUS").click(function() {
-            $("#odontogram").odontogram('setMode', ODONTOGRAM_MODE_HAPUS);
-        });
-        $("#ODONTOGRAM_MODE_DEFAULT").click(function() {
-            $("#odontogram").odontogram('setMode', ODONTOGRAM_MODE_DEFAULT);
-        });
-        $("#ODONTOGRAM_MODE_AMF").click(function() {
-            $("#odontogram").odontogram('setMode', ODONTOGRAM_MODE_AMF);
-        });
-        $("#ODONTOGRAM_MODE_COF").click(function() {
-            $("#odontogram").odontogram('setMode', ODONTOGRAM_MODE_COF);
-        });
-        $("#ODONTOGRAM_MODE_FIS").click(function() {
-            $("#odontogram").odontogram('setMode', ODONTOGRAM_MODE_FIS);
-        });
-        $("#ODONTOGRAM_MODE_NVT").click(function() {
-            $("#odontogram").odontogram('setMode', ODONTOGRAM_MODE_NVT);
-        });
-        $("#ODONTOGRAM_MODE_RCT").click(function() {
-            $("#odontogram").odontogram('setMode', ODONTOGRAM_MODE_RCT);
-        });
-        $("#ODONTOGRAM_MODE_NON").click(function() {
-            $("#odontogram").odontogram('setMode', ODONTOGRAM_MODE_NON);
-        });
-        $("#ODONTOGRAM_MODE_UNE").click(function() {
-            $("#odontogram").odontogram('setMode', ODONTOGRAM_MODE_UNE);
-        });
-        $("#ODONTOGRAM_MODE_PRE").click(function() {
-            $("#odontogram").odontogram('setMode', ODONTOGRAM_MODE_PRE);
-        });
-        $("#ODONTOGRAM_MODE_ANO").click(function() {
-            $("#odontogram").odontogram('setMode', ODONTOGRAM_MODE_ANO);
-        });
-        $("#ODONTOGRAM_MODE_CARIES").click(function() {
-            $("#odontogram").odontogram('setMode', ODONTOGRAM_MODE_CARIES);
-        });
-        $("#ODONTOGRAM_MODE_CFR").click(function() {
-            $("#odontogram").odontogram('setMode', ODONTOGRAM_MODE_CFR);
-        });
-        $("#ODONTOGRAM_MODE_FMC").click(function() {
-            $("#odontogram").odontogram('setMode', ODONTOGRAM_MODE_FMC);
-        });
-        $("#ODONTOGRAM_MODE_POC").click(function() {
-            $("#odontogram").odontogram('setMode', ODONTOGRAM_MODE_POC);
-        });
-        $("#ODONTOGRAM_MODE_RRX").click(function() {
-            $("#odontogram").odontogram('setMode', ODONTOGRAM_MODE_RRX);
-        });
-        $("#ODONTOGRAM_MODE_MIS").click(function() {
-            $("#odontogram").odontogram('setMode', ODONTOGRAM_MODE_MIS);
-        });
-        $("#ODONTOGRAM_MODE_IPX").click(function() {
-            $("#odontogram").odontogram('setMode', ODONTOGRAM_MODE_IPX);
-        });
-        $("#ODONTOGRAM_MODE_FRM_ACR").click(function() {
-            $("#odontogram").odontogram('setMode', ODONTOGRAM_MODE_FRM_ACR);
-        });
-        $("#ODONTOGRAM_MODE_BRIDGE").click(function() {
-            $("#odontogram").odontogram('setMode', ODONTOGRAM_MODE_BRIDGE);
-        });
-        $("#ODONTOGRAM_MODE_ARROW_TOP_LEFT").click(function() {
-            $("#odontogram").odontogram('setMode', ODONTOGRAM_MODE_ARROW_TOP_LEFT);
-        })
-        $("#ODONTOGRAM_MODE_ARROW_TOP_RIGHT").click(function() {
-            $("#odontogram").odontogram('setMode', ODONTOGRAM_MODE_ARROW_TOP_RIGHT);
-        })
-        $("#ODONTOGRAM_MODE_ARROW_TOP_TURN_LEFT").click(function() {
-            $("#odontogram").odontogram('setMode', ODONTOGRAM_MODE_ARROW_TOP_TURN_LEFT);
-        })
-        $("#ODONTOGRAM_MODE_ARROW_TOP_TURN_RIGHT").click(function() {
-            $("#odontogram").odontogram('setMode', ODONTOGRAM_MODE_ARROW_TOP_TURN_RIGHT);
-        })
-        $("#ODONTOGRAM_MODE_ARROW_BOTTOM_LEFT").click(function() {
-            $("#odontogram").odontogram('setMode', ODONTOGRAM_MODE_ARROW_BOTTOM_LEFT);
-        })
-        $("#ODONTOGRAM_MODE_ARROW_BOTTOM_RIGHT").click(function() {
-            $("#odontogram").odontogram('setMode', ODONTOGRAM_MODE_ARROW_BOTTOM_RIGHT);
-        })
-        $("#ODONTOGRAM_MODE_ARROW_BOTTOM_TURN_LEFT").click(function() {
-            $("#odontogram").odontogram('setMode', ODONTOGRAM_MODE_ARROW_BOTTOM_TURN_LEFT);
-        })
-        $("#ODONTOGRAM_MODE_ARROW_BOTTOM_TURN_RIGHT").click(function() {
-            $("#odontogram").odontogram('setMode', ODONTOGRAM_MODE_ARROW_BOTTOM_TURN_RIGHT);
-        })
-
-        $("#download").click(function() {
-            window.open($("#odontogram").odontogram('getDataURL'));
-        })
-        diastema_ket();
-        function diastema_ket() {
-            $('#diastema').on('change', function() {
-                if (this.value == 'Ada') {
-                    $('#dst_ada_ket').removeClass('d-none');
-                } else {
-                    $('#dst_ada_ket').addClass('d-none');
-                }
-            })
-        }
-        // simpan asesmen dan hasil odontogram
-        function simpanAsesmen() {
-            var hasil_keterangan = [];
-            var no_registrasi = $('#no_registrasi').val();
-            var oclusi = $('#oclusi').val();
-            var torus_palatinus = $('#torus_palatinus').val();
-            var torus_mandibularis = $('#torus_mandibularis').val();
-            var palatum = $('#palatum').val();
-            var diastema = $('#diastema').val();
-            var diastema_ket = $('#dst_ada_ket').val();
-            var lain = $('#lainLain').val();
-            var d_typ = $('#d_typ').val();
-            var m_typ = $('#m_typ').val();
-            var f_typ = $('#f_typ').val();
-            var jum_poto = $('#ket_photo').val();
-            var poto_ot = $('#jenis_photo').val();
-            var jum_poto_rg = $('#ket_photo_rg').val();
-            var poto_ot_rg = $('#jenis_photo_org').val();
-            // ambil keterangan
-            $('input[name="ket_odontogram[]"]').each(function() {
-                var item_ket_odontogram = {}
-                var itemnya = $(this).val();
-                item_ket_odontogram['ket'] = itemnya;
-                hasil_keterangan.push(item_ket_odontogram);
-            })
-            // insert ke terangan pada odontogram
-
-            let index_o = 0;
-            const obj_data = hasil_odontogram[0];
-            if(obj_data){
-                Object.keys(obj_data).forEach(key => {
-                    obj_data[key].forEach(item => {
-                        item.keterangan = hasil_keterangan[index_o].ket;
-                        index_o++;
-                    });
-                });
-            }
-            var params = {
-                'odontogram': hasil_odontogram,
-                'no_registrasi': no_registrasi,
-                'oclusi': oclusi,
-                'torus_palatinus': torus_palatinus,
-                'torus_mandibularis': torus_mandibularis,
-                'palatum': palatum,
-                'diastema': diastema,
-                'diastema_ket': diastema_ket,
-                'lain': lain,
-                'd_typ': d_typ,
-                'm_typ': m_typ,
-                'f_typ': f_typ,
-                'jum_poto': jum_poto,
-                'poto_ot': poto_ot,
-                'jum_poto_rg': jum_poto_rg,
-                'poto_ot_rg': poto_ot_rg
-            };
-            console.log(params);
-            $.ajax({
-                url:'/asesmen/simpan-asesmen',
-                data:JSON.stringify(params),
-                type:'POST',
-                dataType:'JSON',
-                success:function(res) {
-                    if(res.code == '200') {
-                        Swal.fire({
-                            icon: 'success',
-                            title: 'Berhasil',
-                            text: 'Data berhasil disimpan',
-                            showConfirmButton: false,
-                            timer: 1500
-                        })
-                        setTimeout(() => {
-                            window.location.href = '/kunjungan/index-kunjungan';
-                        }, 1500);
-                    }else{
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Gagal',
-                            text: 'Data gagal disimpan',
-                            showConfirmButton: false,
-                            timer: 1500
-                        })
-                    }
-                }
-            })
-        }
-        function loadDataOdontogram(geometry) {
-            var baris = "";
-            $.each(geometry, function(index, value) {
-                var key_geom = index;
-                $.each(value, function(index2, value2) {
-                    baris += `<div class="col-12 col-md-6 col-lg-6 mt-2">
-                                <div class="input-group">
-                                    <div class="input-group-prepend">
-                                        <span class="input-group-text">${value2.pos} | ${value2.name}</span>
-                                    </div>  
-                                    <input type="text" id="ket_odontogram_${value2.name}_${value2.pos}" name="ket_odontogram[]" placeholder="Isi Keterangan" name="ket_odontogram" class="form-control">
-                                    <input type="hidden" id="vert_code_${value2.name}"  class="form-control" name="vert_code[]" value="${value2.name}">
-                                    <input type="hidden" id="vert_pos_${value2.pos}"  class="form-control" name="vert_pos[]" value="${value2.pos}">
-                                </div>
-                            </div>`;
-                })
-            })
-            $('#isian_odontogram').html(baris);
-        }
-    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert2/11.23.0/sweetalert2.js"
+        integrity="sha512-SAy+5di7/mSvHkp80IwlsrQxfB5Zo2V8DeYseepV20ttbmwaD18xGLrdQfLNr4W7o7LO0HsNGrngqqag6ZV50Q=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="{{ asset('js_custom/input.js') }}"></script>
 @endpush
