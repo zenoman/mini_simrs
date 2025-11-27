@@ -47,11 +47,83 @@
                 <div class="col-12">
                     @include('admin.odontogram')
                 </div>
-
                 <div class="col-12 mb-3">
                     <div class="card">
+                        <div class="card-header">
+                            <div class="card-title">Keterangan Odontogram</div>
+                        </div>
                         <div class="card-body">
-                            <div class="row" id="isian_odontogram">
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>Posisi Gigi</th>
+                                        <th>Detail</th>
+                                        <th>Keterangan</th>
+                                        <th>Opsi</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tampil_isi_ket">
+                                    
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 mb-3">
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-title">Pemeriksaan</div>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-12 col-lg-3 col-md-3">
+                                    <div class="form-group">
+                                        <label for="">Keluhan Utama</label>
+                                        <input type="text" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="col-12 col-lg-3 col-md-3">
+                                    <div class="form-group">
+                                        <label for="">Diagnosa</label>
+                                        <input type="text" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="col-12 col-lg-3 col-md-3">
+                                    <div class="form-group">
+                                        <label for="">Planing</label>
+                                        <input type="text" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="col-12 col-lg-3 col-md-3">
+                                    <div class="form-group">
+                                        <label for="">Edukasi</label>
+                                        <input type="text" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="col-12 col-lg-3 col-md-3">
+                                    <div class="form-group">
+                                        <label for="">Tekanan Darah</label>
+                                        <input type="text" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="col-12 col-lg-3 col-md-3">
+                                    <div class="form-group">
+                                        <label for="">Suhu</label>
+                                        <input type="text" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="col-12 col-lg-3 col-md-3">
+                                    <div class="form-group">
+                                        <label for="">Nadi</label>
+                                        <input type="text" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="col-12 col-lg-3 col-md-3">
+                                    <div class="form-group">
+                                        <label for="">SPO2</label>
+                                        <input type="text" class="form-control">
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>

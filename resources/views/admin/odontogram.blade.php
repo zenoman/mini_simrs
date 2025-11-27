@@ -64,8 +64,7 @@
             </div>
             <div class="btn-group mt-2 mb-2">
                 <button type="button" class="btn btn-sm btn-info"><i class="bi bi-app"></i></button>
-                <button type="button" class="btn btn-sm btn-outline-info"
-                    id="ODONTOGRAM_MODE_CARIES">CARIES</button>
+                <button type="button" class="btn btn-sm btn-outline-info" id="ODONTOGRAM_MODE_CARIES">CARIES</button>
             </div>
             <div class="btn-group mt-2 mb-2">
                 <button type="button" class="btn btn-sm btn-info"><i class="bi bi-hash"></i></button>
@@ -94,7 +93,6 @@
                     id="ODONTOGRAM_MODE_BRIDGE">BRIDGE</button>
             </div>
             <div class="col-12">
-
                 <div class="btn-group mt-2 mb-2">
                     <button type="button" class="btn btn-sm btn-success"><i
                             class="bi bi-arrow-left-square"></i></button>
@@ -142,10 +140,49 @@
                         id="ODONTOGRAM_MODE_ARROW_BOTTOM_TURN_RIGHT">BOTTOM TURN RIGHT</button>
                 </div>
                 <div class="btn-group mt-2 mb-2">
-                    <button type="button" class="btn btn-sm btn-danger"><i
-                            class="bi bi-eraser"></i></button>
+                    <button type="button" class="btn btn-sm btn-danger"><i class="bi bi-eraser"></i></button>
                     <button type="button" class="btn btn-outline-danger btn-sm " id="ODONTOGRAM_MODE_HAPUS"> <i
                             class="bi bi-x"></i> Hapus</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-12 mb-3 text-center d-none" id="tambah_keterangan">
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-12 col-lg-6 col-md-6 d-none" id="teeth_isian">
+                        <div class="input-group">
+                            <input type="text" class="form-control" placeholder="Keterangan" id="teeth_ket">
+                            <div class="input-group-prepend">
+                                <button type="button" onclick="simpanKetTeeth()" class="btn btn-primary"
+                                    id="simpan_keterangan">Add</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-lg-6 col-md-6 d-none" id="bridge_isian">
+                        <div class="input-group">
+                            {{-- <div class="input-group-prepend"> --}}
+                                <select name="" id="bridge1" class="form-control sl2">
+                                    <option value="18">Bridge 1</option>
+                                    @for ($i = 0; $i < count($allTeeth); $i++)
+                                        <option value="{{ $allTeeth[$i] }}">{{ $allTeeth[$i] }}</option>
+                                    @endfor
+                                </select>
+                                <select name="" id="bridge2" class="form-control sl2">
+                                    <option value="18">Bridge 2</option>
+                                    @for ($i = 0; $i < count($allTeeth); $i++)
+                                        <option value="{{ $allTeeth[$i] }}">{{ $allTeeth[$i] }}</option>
+                                    @endfor
+                                </select>
+                            {{-- </div> --}}
+                            <input type="text" class="form-control" placeholder="Keterangan" id="bridge_ket">
+                            <div class="input-group-prepend">
+                                <button type="button" onclick="simpanKetBridge()" class="btn btn-primary"
+                                    id="simpan_keterangan">Add</button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

@@ -100,12 +100,22 @@ class kunjungan_controller extends Controller
         return redirect('kunjungan/index-kunjungan')->with('sukses','Data Berhasil Diupdate');
     }
     function asesmenGigi($id){
+        $allTeeth = [
+            18,17,16,15,14,13,12,11,
+            21,22,23,24,25,26,27,28,
+            55,54,53,52,51,
+            61,62,63,64,65,
+            85,84,83,82,81,
+            71,72,73,74,75,
+            48,47,46,45,44,43,42,41,
+            31,32,33,34,35,36,37,38
+        ];
         $data=rs_kunjungan::where('no_registrasi','=',$id)
         ->leftJoin('rs_pasien','rs_pasien.no_rm','=','rs_kunjungan.no_rm')
         ->leftJoin('rs_dokter','rs_dokter.kode_dokter','=','rs_kunjungan.kode_dokter')
         ->leftJoin('rs_poli','rs_poli.kode_poli','=','rs_kunjungan.id_poli')
         ->leftJoin('rs_penjamin','rs_penjamin.id_penjamin','=','rs_kunjungan.penjamin_id')
         ->first();
-        return view('admin.asesmen_gigi',compact('id','data'));
+        return view('admin.asesmen_gigi',compact('id','data','allTeeth'));
     }
 }
