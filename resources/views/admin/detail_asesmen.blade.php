@@ -245,6 +245,9 @@
                                             <span class="input-group-text">F</span>
                                         </div>
                                         <input type="text" value="-" class="form-control" id="f_typ">
+                                        <div class="input-append">
+                                            <button onclick="hitungDMF()" class="btn btn-primary">Hitung DMF</button>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
