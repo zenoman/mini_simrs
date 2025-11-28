@@ -46,6 +46,7 @@ Route::prefix('asesmen')->group(function(){
     Route::get('detail-asesmen/{noregist}',[asesmenController::class,'detailAsesmen']);
     Route::get('get-asesmen/{noregist}',[asesmenController::class,'getAsesmen']);
     Route::post('simpan-asesmen',[asesmenController::class,'simpanAsesmen']);
+    Route::post('update-asesmen',[asesmenController::class,'updateAsesmen']);
     Route::get('print-asesmen/{noregist}',[asesmenController::class,'printAsesmen']);
     Route::get('hapus-detail-asesmen/{id}',[asesmenController::class,'hapusDetailAsesmen']);
 });

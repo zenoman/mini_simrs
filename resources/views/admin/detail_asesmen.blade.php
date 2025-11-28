@@ -46,7 +46,7 @@
                     </table>
                 </div>
                 <div class="col-12">
-                    @include('admin.odontogram')
+                    @include('admin.odontogram_edit')
                 </div>
                 <div class="col-12 mb-3">
                     <div class="card">
@@ -64,7 +64,6 @@
                                     </tr>
                                 </thead>
                                 <tbody id="tampil_isi_ket">
-                                    
                                 </tbody>
                             </table>
                         </div>
@@ -305,7 +304,7 @@
                 <button type="button" onclick="printAsesmen('{{ $data->no_registrasi }}')" class="btn  btn-warning "><i
                         class="bi bi-printer"></i> Print
                     Asesmen</button>
-                <button type="button" onclick="" class="btn  btn-primary "><i class="bi bi-save"></i> Simpan
+                <button type="button" onclick="updateAsesmen()" class="btn  btn-primary "><i class="bi bi-save"></i> Simpan
                     Data Asesmen</button>
             </div>
         </div>
@@ -318,5 +317,6 @@
     <script src="{{ asset('js_custom/input.js') }}"></script>
     <script>
         loadAsesmenData("detail");
+        // initial_data();
     </script>
 @endpush

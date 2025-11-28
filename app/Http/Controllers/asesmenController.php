@@ -196,4 +196,113 @@ class asesmenController extends Controller
             'message'=>'Data berhasil dihapus'
         ]);
     }
+    function updateAsesmen(Request $request){
+        $json=$request->json()->all();
+        $odontogram=$json['odontogram'];
+        $odontogram_ket=$json['odontogram_ket'];
+        $no_register=$json['no_registrasi'];
+        $oclusi=$json['oclusi'];
+        $torus_palatinus=$json['torus_palatinus'];
+        $torus_mandibularis=$json['torus_mandibularis'];
+        $palatum=$json['palatum'];
+        $diastema=$json['diastema'];
+        $diastema_ket=$json['diastema_ket'];
+        $lain=$json['lain'];
+        $d_typ=$json['d_typ'];
+        $m_typ=$json['m_typ'];
+        $f_typ=$json['f_typ'];
+        $jum_poto=$json['jum_poto'];
+        $poto_ot=$json['poto_ot'];
+        $jum_poto_rg=$json['jum_poto_rg'];
+        $poto_ot_rg=$json['poto_ot_rg'];
+        $keluhan=$json['keluhan'];
+        $diagnosa=$json['diagnosa'];
+        $planing= $json['planing'];
+        $edukasi= $json['edukasi'];
+        $tkd= $json['tkd'];
+        $suhu=$json['suhu'];
+        $nadi=$json['nadi'];
+        $spo2=$json['spo2'];
+
+        $kode_gambar=$this->generateGambarKode();
+        // simpan ke asesmen
+        $simpan=rs_asesmen_medis::where('no_register','=',$no_register)
+            ->update([
+            'tanggal'=>date('Y-m-d'),
+            'kode_gambar_gigi'=>$kode_gambar,
+            'oclusi'=>$oclusi,
+            'torus_palatinus'=>$torus_palatinus,
+            'torus_mandibularis'=>$torus_mandibularis,
+            'palatum'=>$palatum,
+            'diastema'=>$diastema,
+            'ket_lain'=>$lain,
+            'd_m_f'=>$d_typ."|".$m_typ.'|'.$f_typ,
+            'jum_foto'=>$jum_poto,
+            'jum_foto_rontgen'=>$jum_poto_rg,
+            'diastema_ket'=>$diastema_ket,
+            'foto_ot'=>$poto_ot,
+            'foto_ot_rg'=>$poto_ot_rg,
+            'keluhan'=>$keluhan,
+            "diagnosa"=>$diagnosa,
+            "planning"=>$planing,
+            "edukasi"=>$edukasi,
+            'tkd'=>$tkd,
+            'suhu'=>$suhu,
+            'nadi'=>$nadi,
+            'spo2'=>$spo2,
+            'hasil_odontogram'=>$odontogram,
+            'ket_odontogram'=>$odontogram_ket
+        ]);
+        // ambil keterangan
+        $data_ket=json_decode($odontogram_ket,true);
+        // dd($data_ket);
+        // simpan ke detail gambar
+        $array_ket_teeth=$data_ket['teeth_ket'];
+        $array_ket_bridge=$data_ket['bridge_ket'];
+        // dd($array_ket_bridge);
+        for ($i=0; $i < count($array_ket_bridge); $i++) { 
+            // dd($array_ket_bridge[$i]['pos']);
+            $pos_general=$array_ket_bridge[$i]['pos'];
+            // split dengan bridge
+            $pos_general=explode(' bridge ', $pos_general);
+            foreach ($pos_general as  $value_b) {
+                rs_gambar_gigi::where([
+                    'kode_gambar'=>$no_register,
+                    'code_loc'=>$array_ket_bridge[$i]['name'],
+                    'pos_loc'=>$value_b,
+                    'pos_loc_general'=>$value_b,
+                    ])
+                    ->update([
+                    'keterangan'=>$array_ket_bridge[$i]['keterangan']
+                ]);
+            }
+        }
+        for ($i=0; $i < count($array_ket_teeth); $i++) { 
+            $pos_general=$array_ket_teeth[$i]['pos'];
+            // ambil 2 nomor paling depan
+            $pos_general=substr($pos_general, 0,1);
+            rs_gambar_gigi::where([
+                    'kode_gambar'=>$no_register,
+                    'code_loc'=>$array_ket_teeth[$i]['code'],
+                    'pos_loc'=>$array_ket_teeth[$i]['pos'],
+                    'pos_loc_general'=>$pos_general,
+                ])
+                ->update([
+                'keterangan'=>$array_ket_teeth[$i]['keterangan']
+            ]);
+
+        }
+       
+        if ($simpan) {
+            return response()->json([
+                'code'=>200,
+                'message'=>'Data berhasil disimpan'
+            ]);
+        }else{
+            return response()->json([
+                'code'=>400,
+                'message'=>'Data gagal disimpan'
+            ]);
+        }
+    }
 }
