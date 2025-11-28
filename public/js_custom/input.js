@@ -170,6 +170,7 @@ $("#download").click(function () {
 
 // add array
 function addArrayKet() {
+    const odonto = $("#odontogram").data("odontogram");
     // cari array node teeth pada final odontogram
     if (final_odontogram_arr.teeth.length > 0) {
         // cek apa sudah ada array ket pada teeth
@@ -503,7 +504,7 @@ function loadAsesmenData(jenis) {
                 $('#nadi').html(asesmen.nadi)
                 $('#spo2').html(asesmen.spo2)
                 var lodont = asesmen.hasil_odontogram;
-                hasil_odontogram = JSON.parse(lodont);
+                var hasil_odontogram = JSON.parse(lodont);
                 refreshOdontogramData(hasil_odontogram);
             }else{
                 $("#oclusi").val(asesmen.oclusi).trigger("change");
@@ -532,6 +533,21 @@ function loadAsesmenData(jenis) {
                 $("#jenis_photo").val(asesmen.foto_ot).trigger("change");
                 $("#ket_photo_rg").val(asesmen.jum_poto_rg);
                 $("#jenis_photo_org").val(asesmen.foto_ot_rg).trigger("change");
+                $('#keluhan').val(asesmen.keluhan)
+                $('#diagnosa').val(asesmen.diagnosa)
+                $('#planing').val(asesmen.planning)
+                $('#edukasi').val(asesmen.edukasi)
+                $('#tkd').val(asesmen.tkd)
+                $('#suhu').val(asesmen.suhu)
+                $('#nadi').val(asesmen.nadi)
+                $('#spo2').val(asesmen.spo2)
+                var lodont = asesmen.hasil_odontogram;
+                var hasil_odontogram = JSON.parse(lodont);
+                refreshOdontogramData(hasil_odontogram);
+                var lokent=asesmen.ket_odontogram;
+                var ket_odontogram = JSON.parse(lokent);
+                final_ket_arr = ket_odontogram;
+                tampilKeterangan();
             }
         },
     });

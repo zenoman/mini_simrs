@@ -769,5 +769,9 @@
     <script src="{{ asset('js_custom/input.js') }}"></script>
     <script>
         loadAsesmenData('print');
+        setTimeout(() => {
+            window.print();
+            window.close();
+        }, 1000);
     </script>
 @endpush
