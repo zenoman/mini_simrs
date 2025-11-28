@@ -105,7 +105,7 @@ class asesmenController extends Controller
         for ($i=0; $i < count($array_ket_teeth); $i++) { 
             $pos_general=$array_ket_teeth[$i]['pos'];
             // ambil 2 nomor paling depan
-            $pos_general=substr($pos_general, 0,1);
+            $pos_general=substr($pos_general, 0,2);
             rs_gambar_gigi::create([
                 'kode_gambar'=>$no_register,
                 'code_loc'=>$array_ket_teeth[$i]['code'],
@@ -280,7 +280,7 @@ class asesmenController extends Controller
         for ($i=0; $i < count($array_ket_teeth); $i++) { 
             $pos_general=$array_ket_teeth[$i]['pos'];
             // ambil 2 nomor paling depan
-            $pos_general=substr($pos_general, 0,1);
+            $pos_general=substr($pos_general, 0,2);
             rs_gambar_gigi::where([
                     'kode_gambar'=>$no_register,
                     'code_loc'=>$array_ket_teeth[$i]['code'],
