@@ -40,6 +40,7 @@
                             <td colspan="3">
                                 {{ $data->penjamin . ' (' . $data->no_registrasi . ')' }}
                                 <input type="hidden" id="no_registrasi" value="{{ $data->no_registrasi }}">
+                                <input type="hidden" id="jenis_page" value="buat" >
                             </td>
                         </tr>
                     </table>

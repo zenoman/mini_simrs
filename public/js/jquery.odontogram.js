@@ -1748,8 +1748,10 @@ var ODONTOGRAM_MODE_ARROW_BOTTOM_TURN_RIGHT = 26; // BOTTOM-TURN-RIGHT ARROW
 
     Odontogram.prototype.setGeometryByPos = function (data) {
         let geometry = {};
+        console.log(data);
+        
         for (d of data) {
-            if (!d.code || !d.pos) continue;
+            // if (!d.code || !d.pos) continue;
             if (d.pos.includes('-')) {
                 [pos, sub] = d.pos.split('-');
                 const t = this.search('num', pos);
@@ -2057,7 +2059,10 @@ var ODONTOGRAM_MODE_ARROW_BOTTOM_TURN_RIGHT = 26; // BOTTOM-TURN-RIGHT ARROW
                 newGeom = new HAPUS(geometry.vertices, geometry.options);
                 break;
         }
-
+         // Tambahkan POS agar tidak hilang
+        if (newGeom) {
+            newGeom.pos = geometry.pos;
+        }
         return newGeom;
     }
 

@@ -23,16 +23,15 @@ function initial_data() {
     //
 }
 
-
 function refreshOdontogramData(data) {
-    
     const odonto = $("#odontogram").data("odontogram");
     if (data !== undefined) {
         // 2. Konversi data gigi biasa ke format geometry
-        console.log(data.teeth);
-        
-        const teethGeometry = odonto.setGeometryByPos(data.teeth); 
+        // console.log(data);
+
+        const teethGeometry = odonto.setGeometryByPos(data.teeth);
         // console.log(teethGeometry);
+        // masukan position
         // Ini return objek geometry
         // 3. Tambahkan bridge sebagai objek literal (bukan instance!)
         // Gunakan key khusus agar tidak bentrok
@@ -50,35 +49,6 @@ var odontogram_bridge_arr = [];
 var final_odontogram_arr = [];
 $("#odontogram").on("change", function (_, geometry) {
     // console.log(geometry);
-    // odontogram_arr = [];
-    // odontogram_bridge_arr = [];
-    // final_odontogram_arr = [];
-    Object.keys(geometry).forEach((key) => {
-        const items = geometry[key];
-        items.forEach((item) => {
-            if (item.name == "BRIDGE") {
-                odontogram_bridge_arr.push(item);
-                // tambah keterangan dalam item
-                // item.pos1 = "-";
-                // item.pos2 = "-";
-                // item.keterangan = "-";
-            } else {
-                odontogram_arr.push({
-                    code: item.name,
-                    pos: item.pos ?? "",
-                });
-            }
-        });
-    });
-    final_odontogram_arr = {
-        teeth: odontogram_arr,
-        bridges: odontogram_bridge_arr,
-    };
-    console.log(final_odontogram_arr);
-    addArrayKet();
-});
-
-$("#odontogram_edit").on("change", function (_, geometry) {
     odontogram_arr = [];
     odontogram_bridge_arr = [];
     final_odontogram_arr = [];
@@ -208,9 +178,9 @@ $("#download").click(function () {
 // add array
 function addArrayKet() {
     const odonto = $("#odontogram").data("odontogram");
-    var instance=odonto;
-    if (instance.mode==ODONTOGRAM_MODE_BRIDGE) {
-       for (var i = 0; i < final_odontogram_arr.bridges.length; i++) {
+    var instance = odonto;
+    if (instance.mode == ODONTOGRAM_MODE_BRIDGE) {
+        for (var i = 0; i < final_odontogram_arr.bridges.length; i++) {
             // if (final_odontogram_arr.bridges[i].keterangan == '-') {
             // final_odontogram_arr.bridge[i].ket = [];
             // tampilkan isian keterangan bridge
@@ -220,7 +190,7 @@ function addArrayKet() {
             $("#bridge_isian").removeClass("d-none");
             // }
         }
-    }else{
+    } else {
         for (var i = 0; i < final_odontogram_arr.teeth.length; i++) {
             // if (final_odontogram_arr.teeth[i].keterangan == '-') {
             // final_odontogram_arr.teeth[i].ket = [];
@@ -270,19 +240,36 @@ var odontogram_ket = [];
 var odontogram_ket_bridge = [];
 var final_ket_arr = [];
 function simpanKetTeeth() {
+    var jenis=$("#jenis_page").val();
     // cari pada final odontogram teeth dengan nomor array
     var id_array = $("#id_teeth_ket").val();
     var list_odo = final_odontogram_arr.teeth[id_array];
-    // tambahkan pada odontogram_ket
+    if(jenis == 'edit') {
+        if (final_ket_arr.teeth_ket.length > 0) {
+            for (var i = 0; i < final_ket_arr.teeth_ket.length; i++) {
+                if (i != id_array) {
+                    odontogram_ket.push({
+                        pos: final_ket_arr.teeth_ket[i].pos,
+                        code: final_ket_arr.teeth_ket[i].code,
+                        keterangan: final_ket_arr.teeth_ket[i].keterangan,
+                    });
+                } 
+            }
+        } 
+    }
     odontogram_ket.push({
         pos: list_odo.pos,
         code: list_odo.code,
         keterangan: $("#teeth_ket").val(),
     });
+    // console.log(odontogram_ket);
+
     final_ket_arr = {
         teeth_ket: odontogram_ket,
         bridge_ket: odontogram_ket_bridge,
     };
+    console.log(final_ket_arr);
+
     // tambahakan keterangan pada final odontogram teeth yang belum ada keteranagn
     // for (var i = 0; i < final_odontogram_arr.teeth.length; i++) {
     //     if (final_odontogram_arr.teeth[i].keterangan == '-') {
@@ -295,7 +282,25 @@ function simpanKetTeeth() {
 }
 function simpanKetBridge() {
     var id_array = $("#id_bridge_ket").val();
+    var jenis=$("#jenis_page").val();
     var list_odo = final_odontogram_arr.bridges[id_array];
+
+
+    if(jenis == 'edit') {
+        if (final_ket_arr.bridge_ket.length > 0) {
+            for (var i = 0; i < final_ket_arr.bridge_ket.length; i++) {
+                if (i != id_array) {
+                    odontogram_ket_bridge.push({
+                        pos: final_ket_arr.bridge_ket[i].pos,
+                        pos1: final_ket_arr.bridge_ket[i].pos1,
+                        pos2: final_ket_arr.bridge_ket[i].pos2,
+                        name: final_ket_arr.bridge_ket[i].name,
+                        keterangan: final_ket_arr.bridge_ket[i].keterangan,
+                    });
+                } 
+            }
+        } 
+    }
     odontogram_ket_bridge.push({
         pos: $("#bridge1").val() + " bridge " + $("#bridge2").val(),
         pos1: $("#bridge1").val(),
@@ -316,7 +321,7 @@ function simpanKetBridge() {
     //     }
     // }
     resetIsiKet();
-    console.log(final_ket_arr);
+    // console.log(final_ket_arr);
     tampilKeterangan();
 }
 function tampilKeterangan() {
@@ -537,36 +542,35 @@ function loadAsesmenData(jenis) {
         dataType: "JSON",
         type: "get",
         success: function (res) {
-
             var asesmen = res.asesmen;
-            if(jenis=="print"){
-                $('#oclusi').html(asesmen.oclusi)
-                $('#torus_palatinus').html(asesmen.torus_palatinus)
-                $('#torus_mandibularis').html(asesmen.torus_mandibularis)
-                $('#palatum').html(asesmen.palatum)
-                $('#diastema').html(asesmen.diastema)
-                $('#lainLain').html(asesmen.ket_lain)
+            if (jenis == "print") {
+                $("#oclusi").html(asesmen.oclusi);
+                $("#torus_palatinus").html(asesmen.torus_palatinus);
+                $("#torus_mandibularis").html(asesmen.torus_mandibularis);
+                $("#palatum").html(asesmen.palatum);
+                $("#diastema").html(asesmen.diastema);
+                $("#lainLain").html(asesmen.ket_lain);
                 var dmf = asesmen.d_m_f;
                 dmf = dmf.split("|");
                 $("#d_typ").html(dmf[0]);
                 $("#m_typ").html(dmf[1]);
                 $("#f_typ").html(dmf[2]);
-                $('#ket_photo').html(asesmen.jum_foto);
-                $('#jenis_photo').html(asesmen.foto_ot);
-                $('#ket_photo_rg').html(asesmen.jum_foto_rontgen);
-                $('#jenis_photo_org').html(asesmen.foto_ot_rg);
-                $('#keluhan').html(asesmen.keluhan)
-                $('#diagnosa').html(asesmen.diagnosa)
-                $('#planing').html(asesmen.planning)
-                $('#edukasi').html(asesmen.edukasi)
-                $('#tkd').html(asesmen.tkd)
-                $('#suhu').html(asesmen.suhu)
-                $('#nadi').html(asesmen.nadi)
-                $('#spo2').html(asesmen.spo2)
+                $("#ket_photo").html(asesmen.jum_foto);
+                $("#jenis_photo").html(asesmen.foto_ot);
+                $("#ket_photo_rg").html(asesmen.jum_foto_rontgen);
+                $("#jenis_photo_org").html(asesmen.foto_ot_rg);
+                $("#keluhan").html(asesmen.keluhan);
+                $("#diagnosa").html(asesmen.diagnosa);
+                $("#planing").html(asesmen.planning);
+                $("#edukasi").html(asesmen.edukasi);
+                $("#tkd").html(asesmen.tkd);
+                $("#suhu").html(asesmen.suhu);
+                $("#nadi").html(asesmen.nadi);
+                $("#spo2").html(asesmen.spo2);
                 var lodont = asesmen.hasil_odontogram;
                 var hasil_odontogram = JSON.parse(lodont);
                 refreshOdontogramData(hasil_odontogram);
-            }else{
+            } else {
                 $("#oclusi").val(asesmen.oclusi).trigger("change");
                 $("#torus_palatinus")
                     .val(asesmen.torus_palatinus)
@@ -581,7 +585,7 @@ function loadAsesmenData(jenis) {
                     $("#dst_ada_ket").removeClass("d-none");
                 }
                 $("#dst_ada_ket").val(asesmen.diastema_ket);
-    
+
                 $("#lainLain").val(asesmen.ket_lain);
                 // explode by |
                 var dmf = asesmen.d_m_f;
@@ -593,27 +597,29 @@ function loadAsesmenData(jenis) {
                 $("#jenis_photo").val(asesmen.foto_ot).trigger("change");
                 $("#ket_photo_rg").val(asesmen.jum_poto_rg);
                 $("#jenis_photo_org").val(asesmen.foto_ot_rg).trigger("change");
-                $('#keluhan').val(asesmen.keluhan)
-                $('#diagnosa').val(asesmen.diagnosa)
-                $('#planing').val(asesmen.planning)
-                $('#edukasi').val(asesmen.edukasi)
-                $('#tkd').val(asesmen.tkd)
-                $('#suhu').val(asesmen.suhu)
-                $('#nadi').val(asesmen.nadi)
-                $('#spo2').val(asesmen.spo2)
+                $("#keluhan").val(asesmen.keluhan);
+                $("#diagnosa").val(asesmen.diagnosa);
+                $("#planing").val(asesmen.planning);
+                $("#edukasi").val(asesmen.edukasi);
+                $("#tkd").val(asesmen.tkd);
+                $("#suhu").val(asesmen.suhu);
+                $("#nadi").val(asesmen.nadi);
+                $("#spo2").val(asesmen.spo2);
                 var lodont = asesmen.hasil_odontogram;
                 var hasil_odontogram = JSON.parse(lodont);
                 final_odontogram_arr = hasil_odontogram;
                 refreshOdontogramData(final_odontogram_arr);
-                var lokent=asesmen.ket_odontogram;
+                var lokent = asesmen.ket_odontogram;
                 var ket_odontogram = JSON.parse(lokent);
                 final_ket_arr = ket_odontogram;
+                console.log(final_ket_arr);
+
                 tampilKeterangan();
             }
         },
     });
 }
-function updateAsesmen(){
+function updateAsesmen() {
     var no_registrasi = $("#no_registrasi").val();
     var oclusi = $("#oclusi").val();
     var torus_palatinus = $("#torus_palatinus").val();

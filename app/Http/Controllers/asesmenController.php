@@ -113,7 +113,6 @@ class asesmenController extends Controller
                 'pos_loc_general'=>$pos_general,
                 'keterangan'=>$array_ket_teeth[$i]['keterangan']
             ]);
-
         }
        
         if ($simpan) {
@@ -254,6 +253,8 @@ class asesmenController extends Controller
             'ket_odontogram'=>$odontogram_ket
         ]);
         // ambil keterangan
+        // hapus detail gambar
+        rs_gambar_gigi::where('kode_gambar','=',$no_register)->delete();
         $data_ket=json_decode($odontogram_ket,true);
         // dd($data_ket);
         // simpan ke detail gambar
@@ -266,13 +267,11 @@ class asesmenController extends Controller
             // split dengan bridge
             $pos_general=explode(' bridge ', $pos_general);
             foreach ($pos_general as  $value_b) {
-                rs_gambar_gigi::where([
+                rs_gambar_gigi::create([
                     'kode_gambar'=>$no_register,
                     'code_loc'=>$array_ket_bridge[$i]['name'],
                     'pos_loc'=>$value_b,
                     'pos_loc_general'=>$value_b,
-                    ])
-                    ->update([
                     'keterangan'=>$array_ket_bridge[$i]['keterangan']
                 ]);
             }
@@ -281,13 +280,11 @@ class asesmenController extends Controller
             $pos_general=$array_ket_teeth[$i]['pos'];
             // ambil 2 nomor paling depan
             $pos_general=substr($pos_general, 0,2);
-            rs_gambar_gigi::where([
-                    'kode_gambar'=>$no_register,
-                    'code_loc'=>$array_ket_teeth[$i]['code'],
-                    'pos_loc'=>$array_ket_teeth[$i]['pos'],
-                    'pos_loc_general'=>$pos_general,
-                ])
-                ->update([
+            rs_gambar_gigi::create([
+                'kode_gambar'=>$no_register,
+                'code_loc'=>$array_ket_teeth[$i]['code'],
+                'pos_loc'=>$array_ket_teeth[$i]['pos'],
+                'pos_loc_general'=>$pos_general,
                 'keterangan'=>$array_ket_teeth[$i]['keterangan']
             ]);
 

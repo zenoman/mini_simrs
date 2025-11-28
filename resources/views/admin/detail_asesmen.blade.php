@@ -41,6 +41,7 @@
                                 {{ $data->penjamin . ' (' . $data->no_registrasi . ')' }}
                                 <input type="hidden" id="no_registrasi" value="{{ $data->no_registrasi }}">
                                 <input type="hidden" id="no_gambar" >
+                                <input type="hidden" id="jenis_page" value="edit" >
                             </td>
                         </tr>
                     </table>
