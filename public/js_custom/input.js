@@ -422,9 +422,9 @@ function simpanAsesmen() {
                     showConfirmButton: false,
                     timer: 1500,
                 });
-                // setTimeout(() => {
-                //     window.location.href = "/kunjungan/index-kunjungan";
-                // }, 1500);
+                setTimeout(() => {
+                    window.location.href = "/kunjungan/index-kunjungan";
+                }, 1500);
             } else {
                 Swal.fire({
                     icon: "error",

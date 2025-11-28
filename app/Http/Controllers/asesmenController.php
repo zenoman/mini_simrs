@@ -81,55 +81,41 @@ class asesmenController extends Controller
             'ket_odontogram'=>$odontogram_ket
         ]);
         // ambil keterangan
-        $data_ket=json_decode($odontogram_ket);
+        $data_ket=json_decode($odontogram_ket,true);
         // dd($data_ket);
         // simpan ke detail gambar
-        $array_ket_teeth=$data_ket[0];
-        dd($array_ket_teeth);
+        $array_ket_teeth=$data_ket['teeth_ket'];
         $array_ket_bridge=$data_ket['bridge_ket'];
-
-        foreach ($array_ket_bridge as $key => $value) {
-            $pos_general=$value->pos;
+        // dd($array_ket_bridge);
+        for ($i=0; $i < count($array_ket_bridge); $i++) { 
+            // dd($array_ket_bridge[$i]['pos']);
+            $pos_general=$array_ket_bridge[$i]['pos'];
             // split dengan bridge
             $pos_general=explode(' bridge ', $pos_general);
             foreach ($pos_general as  $value_b) {
                 rs_gambar_gigi::create([
                     'kode_gambar'=>$no_register,
-                    'code_loc'=>$value->name,
+                    'code_loc'=>$array_ket_bridge[$i]['name'],
                     'pos_loc'=>$value_b,
                     'pos_loc_general'=>$value_b,
-                    'keterangan'=>$value->keterangan
+                    'keterangan'=>$array_ket_bridge[$i]['keterangan']
                 ]);
             }
         }
-        foreach ($array_ket_teeth as $key => $value) {
-            $pos_general=substr($value->pos,0,2);
+        for ($i=0; $i < count($array_ket_teeth); $i++) { 
+            $pos_general=$array_ket_teeth[$i]['pos'];
+            // ambil 2 nomor paling depan
+            $pos_general=substr($pos_general, -1);
             rs_gambar_gigi::create([
                 'kode_gambar'=>$no_register,
-                'code_loc'=>$value->code,
-                'pos_loc'=>$value->pos,
+                'code_loc'=>$array_ket_teeth[$i]['code'],
+                'pos_loc'=>$array_ket_teeth[$i]['pos'],
                 'pos_loc_general'=>$pos_general,
-                'keterangan'=>$value->keterangan
+                'keterangan'=>$array_ket_teeth[$i]['keterangan']
             ]);
+
         }
-        // foreach ($odontogram as $value) {
-        //     foreach ($value as $item) {
-        //         for ($i=0; $i < count($item); $i++) { 
-        //             // simpan gambar pos, code ,pos-detail
-        //             $code=$item[$i]['name'];
-        //             $pos=$item[$i]['pos'];
-        //             // ambil pos 2 angka didepam
-        //             $pos_general=substr($pos,0,2);
-        //             rs_gambar_gigi::create([
-        //                 'kode_gambar'=>$kode_gambar,
-        //                 'code_loc'=>$code,
-        //                 'pos_loc'=>$pos,
-        //                 'pos_loc_general'=>$pos_general,
-        //                 'keterangan'=>$item[$i]['keterangan']
-        //             ]);
-        //         }
-        //     }
-        // }
+       
         if ($simpan) {
             return response()->json([
                 'code'=>200,
