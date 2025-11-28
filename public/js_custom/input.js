@@ -348,7 +348,6 @@ function diastema_ket() {
 }
 // simpan asesmen dan hasil odontogram
 function simpanAsesmen() {
-    var hasil_keterangan = [];
     var no_registrasi = $("#no_registrasi").val();
     var oclusi = $("#oclusi").val();
     var torus_palatinus = $("#torus_palatinus").val();
@@ -364,27 +363,26 @@ function simpanAsesmen() {
     var poto_ot = $("#jenis_photo").val();
     var jum_poto_rg = $("#ket_photo_rg").val();
     var poto_ot_rg = $("#jenis_photo_org").val();
+    var keluhan=$('#keluhan').val()
+    var diagnosa=$('#diagnosa').val()
+    var planing=$('#planing').val()
+    var edukasi=$('#edukasi').val()
+    var tkd=$('#tkd').val()
+    var suhu=$('#suhu').val()
+    var nadi=$('#nadi').val()
+    var spo2=$('#spo2').val()
     // ambil keterangan
-    $('input[name="ket_odontogram[]"]').each(function () {
-        var item_ket_odontogram = {};
-        var itemnya = $(this).val();
-        item_ket_odontogram["ket"] = itemnya;
-        hasil_keterangan.push(item_ket_odontogram);
-    });
+    // $('input[name="ket_odontogram[]"]').each(function () {
+    //     var item_ket_odontogram = {};
+    //     var itemnya = $(this).val();
+    //     item_ket_odontogram["ket"] = itemnya;
+    //     hasil_keterangan.push(item_ket_odontogram);
+    // });
     // insert ke terangan pada odontogram
 
-    let index_o = 0;
-    const obj_data = hasil_odontogram[0];
-    if (obj_data) {
-        Object.keys(obj_data).forEach((key) => {
-            obj_data[key].forEach((item) => {
-                item.keterangan = hasil_keterangan[index_o].ket;
-                index_o++;
-            });
-        });
-    }
     var params = {
-        odontogram: hasil_odontogram,
+        odontogram: JSON.stringify(final_odontogram_arr),
+        odontogram_ket: JSON.stringify(final_ket_arr),
         no_registrasi: no_registrasi,
         oclusi: oclusi,
         torus_palatinus: torus_palatinus,
@@ -400,6 +398,14 @@ function simpanAsesmen() {
         poto_ot: poto_ot,
         jum_poto_rg: jum_poto_rg,
         poto_ot_rg: poto_ot_rg,
+        keluhan:keluhan,
+        diagnosa:diagnosa,
+        planing:planing,
+        edukasi:edukasi,
+        tkd:tkd,
+        suhu:suhu,
+        nadi:nadi,
+        spo2:spo2
     };
     console.log(params);
     $.ajax({
@@ -416,9 +422,9 @@ function simpanAsesmen() {
                     showConfirmButton: false,
                     timer: 1500,
                 });
-                setTimeout(() => {
-                    window.location.href = "/kunjungan/index-kunjungan";
-                }, 1500);
+                // setTimeout(() => {
+                //     window.location.href = "/kunjungan/index-kunjungan";
+                // }, 1500);
             } else {
                 Swal.fire({
                     icon: "error",
@@ -432,26 +438,7 @@ function simpanAsesmen() {
     });
 }
 
-function loadDataOdontogram(geometry) {
-    var baris = "";
-    hitungDMF();
-    $.each(geometry, function (index, value) {
-        var key_geom = index;
-        $.each(value, function (index2, value2) {
-            baris += `<div class="col-12 col-md-6 col-lg-6 mt-2">
-                                <div class="input-group">
-                                    <div class="input-group-prepend">
-                                        <span class="input-group-text">${value2.pos} | ${value2.name}</span>
-                                    </div>  
-                                    <input type="text" id="ket_odontogram_${value2.name}_${value2.pos}" name="ket_odontogram[]" placeholder="Isi Keterangan" name="ket_odontogram" class="form-control">
-                                    <input type="hidden" id="vert_code_${value2.name}"  class="form-control" name="vert_code[]" value="${value2.name}">
-                                    <input type="hidden" id="vert_pos_${value2.pos}"  class="form-control" name="vert_pos[]" value="${value2.pos}">
-                                </div>
-                            </div>`;
-        });
-    });
-    $("#isian_odontogram").html(baris);
-}
+
 
 function hitungDMF() {
     var array_d = ["CFR", "RCT", "HO", "KO", "KL", "PAS", "POC"];
@@ -461,20 +448,20 @@ function hitungDMF() {
     var d = 0;
     var m = 0;
     var f = 0;
-    var dont = hasil_odontogram[0];
-    for (var key in dont) {
-        for (var i = 0; i < dont[key].length; i++) {
-            if (array_d.includes(dont[key][i].name)) {
+    var dont = final_odontogram_arr.teeth;
+    // for (var key in dont) {
+        for (var i = 0; i < dont.length; i++) {
+            if (array_d.includes(dont[i].code)) {
                 d++;
             }
-            if (array_m.includes(dont[key][i].name)) {
+            if (array_m.includes(dont[i].code)) {
                 m++;
             }
-            if (array_f.includes(dont[key][i].name)) {
+            if (array_f.includes(dont[i].code)) {
                 f++;
             }
         }
-    }
+    // }
     $("#d_typ").val(d);
     $("#m_typ").val(m);
     $("#f_typ").val(f);

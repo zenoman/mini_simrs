@@ -79,49 +79,49 @@
                                 <div class="col-12 col-lg-3 col-md-3">
                                     <div class="form-group">
                                         <label for="">Keluhan Utama</label>
-                                        <input type="text" class="form-control">
+                                        <input type="text" id="keluhan" class="form-control">
                                     </div>
                                 </div>
                                 <div class="col-12 col-lg-3 col-md-3">
                                     <div class="form-group">
                                         <label for="">Diagnosa</label>
-                                        <input type="text" class="form-control">
+                                        <input type="text" id="diagnosa" class="form-control">
                                     </div>
                                 </div>
                                 <div class="col-12 col-lg-3 col-md-3">
                                     <div class="form-group">
                                         <label for="">Planing</label>
-                                        <input type="text" class="form-control">
+                                        <input type="text" id="planing" class="form-control">
                                     </div>
                                 </div>
                                 <div class="col-12 col-lg-3 col-md-3">
                                     <div class="form-group">
                                         <label for="">Edukasi</label>
-                                        <input type="text" class="form-control">
+                                        <input type="text" id="edukasi" class="form-control">
                                     </div>
                                 </div>
                                 <div class="col-12 col-lg-3 col-md-3">
                                     <div class="form-group">
                                         <label for="">Tekanan Darah</label>
-                                        <input type="text" class="form-control">
+                                        <input type="text" id="tkd" class="form-control">
                                     </div>
                                 </div>
                                 <div class="col-12 col-lg-3 col-md-3">
                                     <div class="form-group">
                                         <label for="">Suhu</label>
-                                        <input type="text" class="form-control">
+                                        <input type="text" id="suhu" class="form-control">
                                     </div>
                                 </div>
                                 <div class="col-12 col-lg-3 col-md-3">
                                     <div class="form-group">
                                         <label for="">Nadi</label>
-                                        <input type="text" class="form-control">
+                                        <input type="text" id="nadi" class="form-control">
                                     </div>
                                 </div>
                                 <div class="col-12 col-lg-3 col-md-3">
                                     <div class="form-group">
                                         <label for="">SPO2</label>
-                                        <input type="text" class="form-control">
+                                        <input type="text" id="spo2" class="form-control">
                                     </div>
                                 </div>
                             </div>
