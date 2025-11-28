@@ -55,7 +55,7 @@
                         <div class="card-body">
                             <table class="table table-bordered">
                                 <thead>
-                                    <tr>
+                                    <tr >
                                         <th>Posisi Gigi</th>
                                         <th>Detail</th>
                                         <th>Keterangan</th>

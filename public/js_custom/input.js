@@ -6,10 +6,9 @@ $(".sl2").select2({
     theme: "bootstrap4",
 });
 var saveData;
-initial_data();
+// initial_data();
 function initial_data() {
     const odonto = $("#odontogram").data("odontogram");
-
     if (saveData !== undefined) {
         // 2. Konversi data gigi biasa ke format geometry
         const teethGeometry = odonto.setGeometryByPos(saveData.teeth); // Ini return objek geometry
@@ -21,11 +20,24 @@ function initial_data() {
             teethGeometry["BRIDGES"].push(bridge);
         }
         $("#odontogram").odontogram("setGeometry", teethGeometry);
-        console.log(teethGeometry);
     }
     //
 }
-
+function refreshOdontogramData(data){
+    const odonto = $("#odontogram").data("odontogram");
+    if (data !== undefined) {
+        // 2. Konversi data gigi biasa ke format geometry
+        const teethGeometry = odonto.setGeometryByPos(data.teeth); // Ini return objek geometry
+        // 3. Tambahkan bridge sebagai objek literal (bukan instance!)
+        // Gunakan key khusus agar tidak bentrok
+        if (!teethGeometry["BRIDGES"]) teethGeometry["BRIDGES"] = [];
+        for (const bridge of data.bridges) {
+            // Pastikan x/y tetap string atau number — tidak masalah karena convertGeomFromObject parse otomatis
+            teethGeometry["BRIDGES"].push(bridge);
+        }
+        $("#odontogram").odontogram("setGeometry", teethGeometry);
+    }
+}
 // var hasil_odontogram = [];
 var odontogram_arr = [];
 var odontogram_bridge_arr = [];
@@ -38,10 +50,14 @@ $("#odontogram").on("change", function (_, geometry) {
         items.forEach((item) => {
             if (item.name == "BRIDGE") {
                 odontogram_bridge_arr.push(item);
+                // tambah keterangan dalam item
+                // item.pos1 = "-";
+                // item.pos2 = "-";
+                // item.keterangan = "-";
             } else {
                 odontogram_arr.push({
                     code: item.name,
-                    pos: item.pos ?? "", // kalau tidak ada pos, kosong
+                    pos: item.pos ?? "",
                 });
             }
         });
@@ -152,88 +168,173 @@ $("#download").click(function () {
     window.open($("#odontogram").odontogram("getDataURL"));
 });
 
+
 // add array
 function addArrayKet() {
     // cari array node teeth pada final odontogram
     if (final_odontogram_arr.teeth.length > 0) {
         // cek apa sudah ada array ket pada teeth
         for (var i = 0; i < final_odontogram_arr.teeth.length; i++) {
-            if (final_odontogram_arr.teeth[i].keterangan == undefined) {
+            // if (final_odontogram_arr.teeth[i].keterangan == '-') {
                 // final_odontogram_arr.teeth[i].ket = [];
                 // tampilkan isian keterangan teeth
                 $("#tambah_keterangan").removeClass("d-none");
                 $("#teeth_isian").removeClass("d-none");
+                $("#id_teeth_ket").val(i);
                 $("#bridge_isian").addClass("d-none");
-            }
+            // }
         }
     }
     // cek apakah type bridge
     if (final_odontogram_arr.bridges.length > 0) {
         for (var i = 0; i < final_odontogram_arr.bridges.length; i++) {
-            if (final_odontogram_arr.bridges[i].keterangan == undefined) {
+            // if (final_odontogram_arr.bridges[i].keterangan == '-') {
                 // final_odontogram_arr.bridge[i].ket = [];
                 // tampilkan isian keterangan bridge
                 $("#tambah_keterangan").removeClass("d-none");
+                $("#id_bridge_ket").val(i);
                 $("#teeth_isian").addClass("d-none");
                 $("#bridge_isian").removeClass("d-none");
-            }
+            // }
         }
     }
 }
 function resetIsiKet() {
     $("#tambah_keterangan").addClass("d-none");
     $("#teeth_isian").addClass("d-none");
+    $("#teeth_ket").val('');
     $("#bridge_isian").addClass("d-none");
 }
+var odontogram_ket=[];
+var odontogram_ket_bridge=[];
+var final_ket_arr=[]
 function simpanKetTeeth() {
-    // tambahakan keterangan pada final odontogram teeth yang belum ada keteranagn
-    for (var i = 0; i < final_odontogram_arr.teeth.length; i++) {
-        if (final_odontogram_arr.teeth[i].keterangan == undefined) {
-            final_odontogram_arr.teeth[i].keterangan = $("#teeth_ket").val();
-        }
+    // cari pada final odontogram teeth dengan nomor array
+    var id_array=$("#id_teeth_ket").val();
+    var list_odo=final_odontogram_arr.teeth[id_array];
+    // tambahkan pada odontogram_ket
+    odontogram_ket.push({
+        pos: list_odo.pos,
+        code: list_odo.code,
+        keterangan: $("#teeth_ket").val()
+    });
+    final_ket_arr={
+        teeth_ket:odontogram_ket,
+        bridge_ket:odontogram_ket_bridge
     }
+    // tambahakan keterangan pada final odontogram teeth yang belum ada keteranagn
+    // for (var i = 0; i < final_odontogram_arr.teeth.length; i++) {
+    //     if (final_odontogram_arr.teeth[i].keterangan == '-') {
+    //         final_odontogram_arr.teeth[i].keterangan = $("#teeth_ket").val();
+    //     }
+    // }
     resetIsiKet();
-    console.log(final_odontogram_arr);
+    console.log(final_ket_arr);
     // tampilkan Pada keterangan
     tampilKeterangan()
 }
 function simpanKetBridge() {
-    // tambahakan keterangan pada final odontogram teeth yang belum ada keteranagn
-    for (var i = 0; i < final_odontogram_arr.bridges.length; i++) {
-        if (final_odontogram_arr.bridges[i].keterangan == undefined) {
-            final_odontogram_arr.bridges[i].keterangan = $("#bridge_ket").val();
-            final_odontogram_arr.bridges[i].pos1 = $("#bridge1").val();
-            final_odontogram_arr.bridges[i].pos2 = $("#bridge2").val();
-        }
+     var id_array=$("#id_bridge_ket").val();
+    var list_odo=final_odontogram_arr.bridges[id_array];
+    odontogram_ket_bridge.push({
+        pos: $('#bridge1').val()+ ' bridge '+$('#bridge2').val(),
+        pos1: $('#bridge1').val(),
+        pos2: $('#bridge2').val(),
+        name: list_odo.name,
+        keterangan: $("#bridge_ket").val()
+    });
+     final_ket_arr={
+        teeth_ket:odontogram_ket,
+        bridge_ket:odontogram_ket_bridge
     }
+    // tambahakan keterangan pada final odontogram teeth yang belum ada keteranagn
+    // for (var i = 0; i < final_odontogram_arr.bridges.length; i++) {
+    //     if (final_odontogram_arr.bridges[i].keterangan == '-') {
+    //         final_odontogram_arr.bridges[i].keterangan = $("#bridge_ket").val();
+    //         final_odontogram_arr.bridges[i].pos1 = $("#bridge1").val();
+    //         final_odontogram_arr.bridges[i].pos2 = $("#bridge2").val();
+    //     }
+    // }
     resetIsiKet();
-    console.log(final_odontogram_arr);
+    console.log(final_ket_arr);
     tampilKeterangan()
-    
 }
 function tampilKeterangan(){
     var baris="";
     // teeth
-    for (let index = 0; index <final_odontogram_arr.teeth.length; index++) {
+    for (let index = 0; index < final_ket_arr.teeth_ket.length; index++) {
         // tampilkan dalam tabel
         baris += `<tr>
-        <td>${final_odontogram_arr.teeth[index].pos}</td>
-        <td>${final_odontogram_arr.teeth[index].code}</td>
-        <td>${final_odontogram_arr.teeth[index].keterangan}</td>
+        <td>${final_ket_arr.teeth_ket[index].pos}</td>
+        <td>${final_ket_arr.teeth_ket[index].code}</td>
+        <td>
+            <input type="text" class="form-control form-control-sm" id="teeth_ket_${index}" value="${final_ket_arr.teeth_ket[index].keterangan}">
+        </td>
+        <td>
+            <button class="btn btn-sm btn-primary" onclick="editTeethKet('${index}')"><i class="bi bi-pencil"></i></button>
+            <button class="btn btn-sm btn-danger" onclick="hapusTeethKet('${index}')"><i class="bi bi-trash"></i></button>
+        </td>
         </tr>`
         
     }
     // bridge
-    for (let index = 0; index <final_odontogram_arr.bridges.length; index++) {
+    for (let index = 0; index <final_ket_arr.bridge_ket.length; index++) {
         // tampilkan dalam tabel
         baris += `<tr>
-        <td>${final_odontogram_arr.bridges[index].pos1 + ' Bridge Ke ' + final_odontogram_arr.bridges[index].pos2}</td>
-        <td>${final_odontogram_arr.bridges[index].name}</td>
-        <td>${final_odontogram_arr.bridges[index].keterangan}</td>
+        <td>${final_ket_arr.bridge_ket[index].pos1 + ' Bridge Ke ' + final_ket_arr.bridge_ket[index].pos2}</td>
+        <td>${final_ket_arr.bridge_ket[index].name}</td>
+        <td>
+            <input type="text" class="form-control form-control-sm" id="bridge_ket_${index}" value="${final_ket_arr.bridge_ket[index].keterangan}">
+        </td>
+        <td>
+            <button class="btn btn-sm btn-primary" onclick="editBridgeKet('${index}')"><i class="bi bi-pencil"></i></button>
+            <button class="btn btn-sm btn-danger" onclick="hapusBridgeKet('${index}')"><i class="bi bi-trash"></i></button>
+        </td>
         </tr>`
     }
-
     $("#tampil_isi_ket").html(baris);
+    initial_data();
+}
+function editTeethKet(id){
+    var ket=$("#teeth_ket_"+id).val();
+    // update ke array 
+    final_ket_arr.teeth_ket[id].keterangan=ket;
+    tampilKeterangan();
+    Swal.fire({
+        icon: 'success',
+        title: 'Data berhasil diubah',
+        showConfirmButton: false,
+        timer: 1500
+    })
+}
+function hapusTeethKet(id){
+    final_ket_arr.teeth_ket.splice(id,1);
+    // hapus pada final odontogram
+    final_odontogram_arr.teeth.splice(id,1);
+    tampilKeterangan();
+    // console.log(final_odontogram_arr);
+    refreshOdontogramData(final_odontogram_arr);
+}
+function hapusBridgeKet(id){
+    final_ket_arr.bridge_ket.splice(id,1);
+    final_odontogram_arr.bridges.splice(id,1);
+    tampilKeterangan();
+    // console.log(final_odontogram_arr);
+    refreshOdontogramData(final_odontogram_arr);
+    console.log(final_odontogram_arr);
+    
+}
+function editBridgeKet(id){
+    var ket=$("#bridge_ket_"+id).val();
+    // update ke array 
+    final_ket_arr.bridge_ket[id].keterangan=ket;
+    tampilKeterangan();
+    Swal.fire({
+        icon: 'success',
+        title: 'Data berhasil diubah',
+        showConfirmButton: false,
+        timer: 1500
+    })
 }
 diastema_ket();
 function diastema_ket() {
