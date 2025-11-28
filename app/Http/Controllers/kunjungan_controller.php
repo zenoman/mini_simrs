@@ -69,6 +69,7 @@ class kunjungan_controller extends Controller
         return redirect('kunjungan/index-kunjungan')->with('sukses','Data Berhasil Dihapus');
     }
     function editKunjungan($id){
+        
         $data=rs_kunjungan::where('rs_kunjungan.id','=',$id)
         ->leftJoin('rs_dokter','rs_dokter.kode_dokter','=','rs_kunjungan.kode_dokter')
         ->leftJoin('rs_pasien','rs_pasien.no_rm','=','rs_kunjungan.no_rm')

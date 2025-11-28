@@ -105,7 +105,7 @@ class asesmenController extends Controller
         for ($i=0; $i < count($array_ket_teeth); $i++) { 
             $pos_general=$array_ket_teeth[$i]['pos'];
             // ambil 2 nomor paling depan
-            $pos_general=substr($pos_general, -1);
+            $pos_general=substr($pos_general, 0,1);
             rs_gambar_gigi::create([
                 'kode_gambar'=>$no_register,
                 'code_loc'=>$array_ket_teeth[$i]['code'],
@@ -129,17 +129,27 @@ class asesmenController extends Controller
         }
     }
     function detailAsesmen($noregister) {
+        $allTeeth = [
+            18,17,16,15,14,13,12,11,
+            21,22,23,24,25,26,27,28,
+            55,54,53,52,51,
+            61,62,63,64,65,
+            85,84,83,82,81,
+            71,72,73,74,75,
+            48,47,46,45,44,43,42,41,
+            31,32,33,34,35,36,37,38
+        ];
         $data=rs_kunjungan::where('no_registrasi',$noregister)
         ->leftJoin('rs_pasien','rs_pasien.no_rm','=','rs_kunjungan.no_rm')
         ->leftJoin('rs_dokter','rs_dokter.kode_dokter','=','rs_kunjungan.kode_dokter')
         ->leftJoin('rs_poli','rs_poli.kode_poli','=','rs_kunjungan.id_poli')
         ->leftJoin('rs_penjamin','rs_penjamin.id_penjamin','=','rs_kunjungan.penjamin_id')
         ->first();
-        return view('admin.detail_asesmen',compact('data'));
+        return view('admin.detail_asesmen',compact('data','allTeeth'));
     }
     function  getAsesmen($noreg) {
         $data=rs_asesmen_medis::where('no_register','=',$noreg)
-        ->leftJoin('rs_gambar_gigi','rs_gambar_gigi.kode_gambar','=','rs_asesmen_medis.kode_gambar_gigi')
+        ->leftJoin('rs_gambar_gigi','rs_gambar_gigi.kode_gambar','=','rs_asesmen_medis.no_register')
         ->select('rs_asesmen_medis.no_register','rs_gambar_gigi.id','rs_gambar_gigi.code_loc as code','rs_gambar_gigi.pos_loc as pos','rs_gambar_gigi.pos_loc_general','rs_gambar_gigi.keterangan')
         ->get();
         $asesmen=rs_asesmen_medis::where('no_register','=',$noreg)->first();
@@ -158,7 +168,7 @@ class asesmenController extends Controller
         ->first();
         $asesmen=rs_asesmen_medis::where('no_register','=',$noreg)->first();
         $detail_gambar=rs_asesmen_medis::where('no_register','=',$noreg)
-        ->leftJoin('rs_gambar_gigi','rs_gambar_gigi.kode_gambar','=','rs_asesmen_medis.kode_gambar_gigi')
+        ->leftJoin('rs_gambar_gigi','rs_gambar_gigi.kode_gambar','=','rs_asesmen_medis.no_register')
         ->select('rs_asesmen_medis.no_register','rs_gambar_gigi.code_loc as code','rs_gambar_gigi.pos_loc as pos','rs_gambar_gigi.pos_loc_general','rs_gambar_gigi.keterangan')
         ->get();
         return view('admin.print_asesmen',compact('asesmen','data','detail_gambar'));
